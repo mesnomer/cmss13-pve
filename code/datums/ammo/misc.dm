@@ -479,42 +479,24 @@
 	flick("grenade", O)
 	QDEL_IN(O, 7)
 
+/datum/ammo/anti_air
+	name = "anti-air missile"
+	ping = null //no bounce off.
+	damage_type = CLONE //Shouldn't ever hit anyone
+	flags_ammo_behavior = AMMO_MP //As above, ensures it'll miss if it ever travels any distance
+	icon_state = "flare"
+	damage = 0
+	max_range = 1
+	shell_speed = AMMO_SPEED_TIER_HITSCAN
 
-/datum/ammo/sentry_grenade
-	name = "M74 AGM-F 40mm grenade"
-	icon_state = "sentry_grenade"
-	shrapnel_type = /datum/ammo/bullet/shrapnel/jagged
-	shell_speed = AMMO_SPEED_TIER_5
-	damage = 30
-	penetration= ARMOR_PENETRATION_TIER_10
-	max_range = 12
+/datum/ammo/anti_air/on_hit_mob(mob/mob, obj/projectile/projectile)
+	return
 
-/datum/ammo/sentry_grenade/on_hit_mob(mob/living/M, obj/projectile/P)
-	create_detonation(M.loc, P)
+/datum/ammo/anti_air/on_hit_obj(obj/object, obj/projectile/projectile)
+	return
 
-/datum/ammo/sentry_grenade/on_hit_obj(obj/O, obj/projectile/P)
-	create_detonation(O.loc, P)
+/datum/ammo/anti_air/on_hit_turf(turf/turf, obj/projectile/projectile)
+	return
 
-/datum/ammo/sentry_grenade/on_hit_turf(turf/T, obj/projectile/P)
-	create_detonation(T, P)
-
-/datum/ammo/sentry_grenade/do_at_max_range(obj/projectile/P)
-	create_detonation(P.loc, P)
-
-/datum/ammo/sentry_grenade/proc/create_detonation(loc, obj/projectile/P)
-	var/shrapnel_count = 16
-	var/direct_hit_shrapnel = 5
-	var/dispersion_angle = 40
-	create_shrapnel(loc, min(direct_hit_shrapnel, shrapnel_count), P.dir, dispersion_angle, shrapnel_type, P.weapon_cause_data, FALSE, 100)
-	shrapnel_count -= direct_hit_shrapnel
-	if(shrapnel_count)
-		create_shrapnel(loc, shrapnel_count, P.dir, dispersion_angle ,shrapnel_type, P.weapon_cause_data, FALSE, 0)
-	apply_explosion_overlay(loc)
-	cell_explosion(loc, 30, 30, EXPLOSION_FALLOFF_SHAPE_EXPONENTIAL_HALF, null, P.weapon_cause_data)
-
-/datum/ammo/sentry_grenade/proc/apply_explosion_overlay(turf/loc)
-	var/obj/effect/overlay/O = new /obj/effect/overlay(loc)
-	O.name = "grenade"
-	O.icon = 'icons/effects/explosion.dmi'
-	flick("grenade", O)
-	QDEL_IN(O, 7)
+/datum/ammo/anti_air/do_at_max_range(obj/projectile/projectile)
+	return
