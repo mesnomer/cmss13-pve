@@ -497,6 +497,17 @@ Defined in conflicts.dm of the #defines folder.
 	melee_mod = 0 //Integrated attachment for visuals, stats handled on main gun.
 	size_mod = 0
 
+/obj/item/attachable/upp_smartgun
+	name = "RFVS-37 barrel"
+	desc = "This isn't supposed to be separated from the gun, how'd this happen?"
+	icon_state = "rfvs37_barrel"
+	attach_icon = "rfvs37_barrel"
+	slot = "muzzle"
+	wield_delay_mod = WIELD_DELAY_NONE
+	flags_attach_features = NO_FLAGS
+	melee_mod = 0
+	size_mod = 0
+
 /obj/item/attachable/sniperbarrel
 	name = "sniper barrel"
 	icon = 'icons/obj/items/weapons/guns/attachments/barrel.dmi'
@@ -671,6 +682,17 @@ Defined in conflicts.dm of the #defines folder.
 
 /obj/item/attachable/mateba/short/dark
 	icon_state = "mateba_short_a"
+
+/obj/item/attachable/isr_barrel
+	name = "ISR barrel"
+	desc = "This isn't supposed to be separated from the gun, how'd this happen?"
+	icon_state = "isr_barrel"
+	attach_icon = "isr_barrel"
+	slot = "muzzle"
+	wield_delay_mod = WIELD_DELAY_NONE
+	flags_attach_features = NO_FLAGS
+	melee_mod = 0 //Integrated attachment for visuals, stats handled on main gun.
+	size_mod = 0
 
 // ======== Rail attachments ======== //
 
@@ -1136,6 +1158,20 @@ Defined in conflicts.dm of the #defines folder.
 /obj/item/attachable/scope/variable_zoom/integrated
 	name = "variable zoom scope"
 
+/obj/item/attachable/scope/variable_zoom/integrated/svd_iff
+	name = "variable IFF enabled zoom scope"
+
+/obj/item/attachable/scope/variable_zoom/integrated/svd_iff/New()
+	..()
+	delay_mod = -FIRE_DELAY_TIER_2
+	scatter_mod = -SCATTER_AMOUNT_TIER_10
+/*
+/obj/item/attachable/scope/variable_zoom/integrated/svd_iff/set_bullet_traits()
+	LAZYADD(traits_to_give, list(
+		BULLET_TRAIT_ENTRY(/datum/element/bullet_trait_iff)
+	))
+*/
+
 /obj/item/attachable/scope/variable_zoom/slavic
 	icon_state = "slavicscope"
 	attach_icon = "slavicscope"
@@ -1228,6 +1264,12 @@ Defined in conflicts.dm of the #defines folder.
 	attach_icon = "huntingscope"
 	desc = "Generic fixed-magnification 2x optic. Common just about everywhere in civil hands, and sometimes used by law enforcement too."
 
+/obj/item/attachable/scope/mini/hunting/upp
+	name = "POS-3 hunting mini-scope"
+	icon_state = "upphuntingscope"
+	attach_icon = "upphuntingscope"
+	desc = "Simple Union-made civilian hunting/sport scope."
+
 /obj/item/attachable/scope/mini/nsg23
 	name = "W-Y S4 2x advanced telescopic mini-scope"
 	desc = "An ARMAT S4 telescoping eye piece, revised by W-Y scientists to be much more ergonomic."
@@ -1256,6 +1298,24 @@ Defined in conflicts.dm of the #defines folder.
 /obj/item/attachable/scope/mini/army
 	desc = "An ARMAT S4 scope, type designation AN/PVQ-45. 2x magnification optic, increases accuracy while scoped, decreases RoF and increased wield speed."
 	zoom_offset = 4
+
+//Mini-scope for the scout rifle
+
+/obj/item/attachable/scope/mini/scout
+	name = "M49A targeting relay"
+	desc = "An ARMAT M49A5 optical interface, type designation AN/PVX-56. Wirelessly links to the operators M49A eyepiece to give a one-to-one boresighted picture of where the rifle is aiming. Includes a Computer-Calculated-Impact-Point system for precision shooting."
+	icon_state = "m49a_custom_scope"
+	attach_icon = "m49a_custom_scope"
+	zoom_offset = 7
+	dynamic_aim_slowdown = SLOWDOWN_ADS_NONE
+
+/obj/item/attachable/scope/mini/scout/activate_attachment(obj/item/weapon/gun/G, mob/living/carbon/user, turn_off)
+	if(ishuman(user))
+		var/mob/living/carbon/human/human = user
+		if(!istype(human.glasses, /obj/item/clothing/glasses/night/M49A))
+			to_chat(human, SPAN_WARNING("You can't use the targeting relay without the battle-sight eyepiece!"))
+			return
+	..()
 
 // PVE tech-man compliant mini scope, planned to have togglable vision modes for shitty night-vision when scoped in
 
@@ -2091,6 +2151,22 @@ Defined in conflicts.dm of the #defines folder.
 	recoil_unwielded_mod = RECOIL_AMOUNT_TIER_4
 	scatter_unwielded_mod = SCATTER_AMOUNT_TIER_8
 
+/obj/item/attachable/stock/olympiets
+	name = "Olympiets 'wooden' stock"
+	desc = "Shouldn't be seeing this."
+	icon_state = "olympiets_stock"
+	flags_attach_features = NO_FLAGS
+	hud_offset_mod = 6
+	accuracy_mod = 0
+	recoil_mod = 0
+	scatter_mod = 0
+	movement_onehanded_acc_penalty_mod = 0
+	accuracy_unwielded_mod = 0
+	recoil_unwielded_mod = 0
+	scatter_unwielded_mod = 0
+	aim_speed_mod = 0
+	wield_delay_mod = WIELD_DELAY_NONE
+
 /obj/item/attachable/stock/hg3712
 	name = "hg3712 stock"
 	desc = "The non-detachable stock of a HG 37-12 pump shotgun."
@@ -2508,6 +2584,11 @@ Defined in conflicts.dm of the #defines folder.
 	melee_mod = 0 //Integrated attachment for visuals, stats handled on main gun.
 	size_mod = 0
 
+/obj/item/attachable/m49a_barrel/forecon
+	name = "M49A2 barrel"
+	icon_state = "m49a_barrel_a"
+	attach_icon = "m49a_barrel_a"
+
 /* /obj/item/attachable/m49a_barrel/New()
 	..()
 	select_gamemode_skin(type)
@@ -2534,25 +2615,21 @@ Defined in conflicts.dm of the #defines folder.
 	melee_mod = 0 //Integrated attachment for visuals, stats handled on main gun.
 	size_mod = 0
 
-/obj/item/attachable/m49a_barrel_custom/New()
-	..()
-	select_gamemode_skin(type)
-
-/obj/item/attachable/m49a_barrel_custom/select_gamemode_skin(expected_type, list/override_icon_state, list/override_protection)
-	. = ..()
-	var/new_attach_icon
-	switch(SSmapping.configs[GROUND_MAP].camouflage_type)
-		if("snow")
-			attach_icon = new_attach_icon ? new_attach_icon : "s_" + attach_icon
-		if("desert")
-			attach_icon = new_attach_icon ? new_attach_icon : "d_" + attach_icon
-		if("classic")
-			attach_icon = new_attach_icon ? new_attach_icon : "c_" + attach_icon
-
 /obj/item/attachable/m49a_barrel/pve
 	name = "M49A6 muzzle break"
 	icon_state = "pve_m49a_barrel"
 	attach_icon = "pve_m49a_barrel"
+
+/obj/item/attachable/olympiets_barrel
+	name = "Olympiets barrel"
+	desc = "This isn't supposed to be separated from the gun, how'd this happen?"
+	icon_state = "olympiets_barrel"
+	attach_icon = "olympiets_barrel"
+	slot = "special"
+	wield_delay_mod = WIELD_DELAY_NONE
+	flags_attach_features = NO_FLAGS
+	melee_mod = 0
+	size_mod = 0
 
 /obj/item/attachable/upp_rpg_breech
 	name = "HJRA-12 Breech"
@@ -2901,6 +2978,18 @@ Defined in conflicts.dm of the #defines folder.
 	name = "NSG 23 stock"
 	desc = "If you can read this, someone screwed up. Go Github this and bug a coder."
 	icon_state = "nsg23_stock"
+	slot = "stock"
+	wield_delay_mod = WIELD_DELAY_NONE
+	melee_mod = 5
+	size_mod = 2
+	pixel_shift_x = 21
+	pixel_shift_y = 20
+	hud_offset_mod = 2
+
+/obj/item/attachable/stock/isr
+	name = "ISR stock"
+	desc = "If you can read this, someone screwed up. Go Github this and bug a coder."
+	icon_state = "isr_stock"
 	slot = "stock"
 	wield_delay_mod = WIELD_DELAY_NONE
 	melee_mod = 5
@@ -3380,7 +3469,6 @@ Defined in conflicts.dm of the #defines folder.
 
 /obj/item/attachable/attached_gun/grenade/type71/ag80
 	name = "\improper GP-45 grenade launcher"
-	desc = "Integrated grenade launcher yipee"
 	icon_state = "grenade-ag80"
 	attach_icon = "grenade-ag80_a"
 	has_breech = TRUE
@@ -3565,6 +3653,7 @@ Defined in conflicts.dm of the #defines folder.
 	current_rounds = 5
 	ammo = /datum/ammo/bullet/shotgun/buckshot/masterkey
 	slot = "under"
+	pixel_shift_y = 18
 	fire_sound = 'sound/weapons/gun_shotgun_u7.ogg'
 	gun_activate_sound = 'sound/weapons/handling/gun_u7_activate.ogg'
 	flags_attach_features = ATTACH_REMOVABLE|ATTACH_ACTIVATION|ATTACH_PROJECTILE|ATTACH_RELOADABLE|ATTACH_WEAPON
